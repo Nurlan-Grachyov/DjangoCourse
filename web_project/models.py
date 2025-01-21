@@ -1,8 +1,8 @@
 from django.db import models
-from django.db.models import CharField, TextField, DateTimeField, ForeignKey, Model, ManyToManyField
+from django.db.models import CharField, TextField, DateTimeField, ForeignKey, ManyToManyField
 
 
-class RecipientMailing(models.Model):
+class Recipient(models.Model):
     email = CharField(max_length=100, unique=True)
     fullname = CharField(max_length=100)
     comment = TextField(verbose_name="комментарий")
@@ -38,7 +38,7 @@ class Mailing(models.Model):
     last_sending = DateTimeField(verbose_name='Время конца')
     status = CharField(choices=STATUS_IN_CHOICES, max_length=7, verbose_name='Статус')
     message = ForeignKey(Message, on_delete=models.CASCADE, verbose_name="Сообщение")
-    recipient = ManyToManyField(RecipientMailing, related_name='mailings', verbose_name="Клиент")
+    recipient = ManyToManyField(Recipient, related_name='mailings', verbose_name="Клиент")
 
     class Meta:
         verbose_name = "Рассылка"
@@ -58,7 +58,7 @@ class AttemptMailing(models.Model):
     date_attempt = DateTimeField(verbose_name='Дата и время попытки')
     status = CharField(choices=STATUS_IN_CHOICES, max_length=7, verbose_name='Статус')
     answer = TextField(verbose_name="Ответ почтового сервера")
-    Mailing = ForeignKey(Mailing, related_name='attempts', verbose_name="Попытка", on_delete=models.CASCADE)
+    mailing = ForeignKey(Mailing, related_name='attempts', verbose_name="Попытка", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Попытка"
