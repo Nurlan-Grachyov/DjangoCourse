@@ -8,7 +8,7 @@ class Recipient(models.Model):
     comment = TextField(verbose_name="комментарий")
 
     class Meta:
-        verbose_name = "клиент"
+        verbose_name = "Клиент"
         verbose_name_plural = "Клиенты"
         ordering = ["email", "fullname"]
 
@@ -43,7 +43,7 @@ class Mailing(models.Model):
     class Meta:
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
-        ordering = ["first_sending", "last_sending", "status", "recipient"]
+        ordering = ["first_sending", "last_sending", "status"]
 
 
 class AttemptMailing(models.Model):
@@ -56,11 +56,11 @@ class AttemptMailing(models.Model):
     ]
 
     date_attempt = DateTimeField(verbose_name='Дата и время попытки')
-    status = CharField(choices=STATUS_IN_CHOICES, max_length=7, verbose_name='Статус')
+    status = CharField(choices=STATUS_IN_CHOICES, max_length=11, verbose_name='Статус')
     answer = TextField(verbose_name="Ответ почтового сервера")
     mailing = ForeignKey(Mailing, related_name='attempts', verbose_name="Попытка", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Попытка"
         verbose_name_plural = "Попытки"
-        ordering = ["date_attempt", "status", "answer", "Mailing"]
+        ordering = ["date_attempt", "status", "answer", "mailing"]

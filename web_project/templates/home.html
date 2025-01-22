@@ -1,23 +1,37 @@
 {% extends 'base.html' %}
-
+{% include 'header.html' %}
 {% block title %}Home{% endblock %}
 {% block content %}
-<div class="album py-5 bg-body-tertiary">
-    <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            {% for recipient in recipients %}
-            <div class="col">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <p class="card-text">{{ article.name }}</p>
-                        <p class="card-text">{{ article.description|slice:"100" }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <a href="{% url 'blog:blog_detail' pk=article.pk %}"
-                                   class="btn btn-primary">Подробнее</a>
-                            </div>
-                        </div>
-                    </div>
+<div class="album py-5 bg-body-tertiary container">
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        <div class="col-4">
+            <p>Получатели рассылки</p>
+<!--            {% for recipient in recipients %}-->
+            <div class="card h-10 mt-2 shadow-sm">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h3 class="card-title">{{ recipient }}</h3>
+                </div>
+            </div>
+<!--            {% endfor %}-->
+        </div>
+        <div class="col-4">
+            <p>Рассылки</p>
+<!--            {% for mailing in all_mailings %}-->
+            <div class="card h-10 mt-2 shadow-sm">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h6 class="card-title">{{ all_mailings }}</h6>
+<!--                    <p class="card-title">{{ mailing.message.body_letter }}</p>-->
+                </div>
+            </div>
+<!--            {% endfor %}-->
+        </div>
+        <div class="col-4">
+            <p>Рассылки со статусом "Запущена"</p>
+            {% for active_mailing in active_mailings %}
+            <div class="card h-10 mt-2 shadow-sm">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h6 class="card-title">{{ active_mailing.message.subject_letter }}</h6>
+                    <p class="card-title">{{ active_mailing.message.body_letter }}</p>
                 </div>
             </div>
             {% endfor %}

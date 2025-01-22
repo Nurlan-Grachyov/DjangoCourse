@@ -3,15 +3,18 @@ from django.views.generic import CreateView, ListView, DetailView, UpdateView, D
 
 from web_project.models import Mailing
 
+
 # web_project:mailing_list- главная страница для рассылок
 class MailingListView(ListView):
     model = Mailing
-    template_name = "mailing_list.html"
+    template_name = "home.html"
     context_object_name = "mailings"
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     return queryset.filter(is_created=True)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['all_mailings'] = Mailing.objects.all()
+        context['active_mailings'] = Mailing.objects.all()
+        return context
 
 
 class MailingCreateView(CreateView):

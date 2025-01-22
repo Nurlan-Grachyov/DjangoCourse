@@ -19,9 +19,9 @@ class MessageAdmin(admin.ModelAdmin):
 
 @admin.register(Mailing)
 class MailingAdmin(admin.ModelAdmin):
-    list_display = ("first_sending", "last_sending", "status", "message", "recipient")
-    list_filter = ("first_sending", "last_sending", "status", "recipient")
-    search_fields = ("first_sending", "last_sending", "status", "recipient")
+    list_display = ("first_sending", "last_sending", "status", "message")
+    list_filter = ("first_sending", "last_sending", "status")
+    search_fields = ("first_sending", "last_sending", "status")
 
 
 @admin.register(AttemptMailing)

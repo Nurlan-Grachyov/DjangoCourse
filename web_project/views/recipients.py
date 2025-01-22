@@ -4,15 +4,29 @@ from django.views.generic import CreateView, ListView, DetailView, UpdateView, D
 from web_project.models import Recipient
 
 # web_project:home - общая главная страница
+from django.views.generic import TemplateView
+from ..models import Recipient, Mailing
+
+
+class HomeView(TemplateView):
+    template_name = "home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['recipients'] = Recipient.objects.all().count()
+        context['all_mailings'] = Mailing.objects.all().count()
+        context['active_mailings'] = Mailing.objects.filter(status='started')
+        return context
 
 class RecipientListView(ListView):
     model = Recipient
-    template_name = "recipient_list.html"
+    template_name = "home.html"
     context_object_name = "recipients"
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     return queryset.filter(is_created=True)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["count_recipients"] = Recipient.objects.all().count()
+        return context
 
 
 class RecipientCreateView(CreateView):

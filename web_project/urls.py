@@ -8,12 +8,12 @@ from web_project.views.mailings import MailingListView, MailingCreateView, Maili
 from web_project.views.messages import MessageListView
 
 from web_project.views.recipients import RecipientListView, RecipientCreateView, RecipientDetailView, \
-    RecipientUpdateView, RecipientDeleteView
+    RecipientUpdateView, RecipientDeleteView, HomeView
 
 app_name = WebProjectConfig.name
 
 urlpatterns = [
-    path("home/", RecipientListView.as_view(), name="home"),
+    path("home/", HomeView.as_view(), name="home"),
     path("recipient_create/", RecipientCreateView.as_view(), name="recipient_create"),
     path("recipient_detail/", RecipientDetailView.as_view(), name="recipient_detail"),
     path("recipient_update/", RecipientUpdateView.as_view(), name="recipient_update"),
