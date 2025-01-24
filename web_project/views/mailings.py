@@ -7,7 +7,7 @@ from web_project.models import Mailing
 # web_project:mailing_list- главная страница для рассылок
 class MailingListView(ListView):
     model = Mailing
-    template_name = "home.html"
+    template_name = "mailing/mailing_home.html"
     context_object_name = "mailings"
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -19,14 +19,14 @@ class MailingListView(ListView):
 
 class MailingCreateView(CreateView):
     model = Mailing
-    template_name = "mailing_create.html"
+    template_name = "mailing/create_update_mailing.html"
     fields = ["first_sending", "last_sending", "status", "message", "recipient"]
-    success_url = reverse_lazy("web_project:mailing_list")
+    success_url = reverse_lazy("web_project:mailing_home")
 
 
 class MailingDetailView(DetailView):
     model = Mailing
-    template_name = "mailing_detail.html"
+    template_name = "mailing/mailing_detail.html"
     context_object_name = "mailing"
 
     # def get_object(self, queryset=None):
@@ -39,7 +39,8 @@ class MailingDetailView(DetailView):
 class MailingUpdateView(UpdateView):
     model = Mailing
     fields = ["first_sending", "last_sending", "status", "message", "recipient"]
-    template_name = "mailing_create.html"
+    template_name = "mailing/create_update_mailing.html"
+    success_url = reverse_lazy("web_project:mailing_home")
 
     # def get_success_url(self):
     #     return reverse("blog:blog_detail", kwargs={"pk": self.object.pk})
@@ -47,6 +48,6 @@ class MailingUpdateView(UpdateView):
 
 class MailingDeleteView(DeleteView):
     model = Mailing
-    template_name = "mailing_delete.html"
+    template_name = "mailing/mailing_delete.html"
     context_object_name = "mailing"
-    success_url = reverse_lazy("web_project:mailing_list")
+    success_url = reverse_lazy("web_project:mailing_home")

@@ -7,8 +7,10 @@ from web_project.models import Message
 
 class MessageListView(ListView):
     model = Message
-    template_name = "message_list.html"
+    template_name = "message/message_home.html"
     context_object_name = "messages"
+    success_url = reverse_lazy("web_project:message_delete")
+
 
     # def get_queryset(self):
     #     queryset = super().get_queryset()
@@ -17,14 +19,14 @@ class MessageListView(ListView):
 
 class MessageCreateView(CreateView):
     model = Message
-    template_name = "message_create.html"
+    template_name = "message/create_update_message.html"
     fields = ["subject_letter", "body_letter"]
-    success_url = reverse_lazy("web_project:message_list")
+    success_url = reverse_lazy("web_project:message_home")
 
 
 class MessageDetailView(DetailView):
     model = Message
-    template_name = "message_detail.html"
+    template_name = "message/message_detail.html"
     context_object_name = "message"
 
     # def get_object(self, queryset=None):
@@ -37,7 +39,7 @@ class MessageDetailView(DetailView):
 class MessageUpdateView(UpdateView):
     model = Message
     fields = ["subject_letter", "body_letter"]
-    template_name = "message_create.html"
+    template_name = "message/create_update_message.html"
 
     # def get_success_url(self):
     #     return reverse("blog:blog_detail", kwargs={"pk": self.object.pk})
@@ -45,6 +47,6 @@ class MessageUpdateView(UpdateView):
 
 class MessageDeleteView(DeleteView):
     model = Message
-    template_name = "message_delete.html"
+    template_name = "message/message_delete.html"
     context_object_name = "message"
-    success_url = reverse_lazy("web_project:message_list")
+    success_url = reverse_lazy("web_project:message_home")
