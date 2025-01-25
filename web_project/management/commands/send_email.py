@@ -1,7 +1,10 @@
+import os
+
 from django.core.management.base import BaseCommand
 from django.core.mail import send_mail
+from dotenv import load_dotenv
 
-
+load_dotenv()
 class Command(BaseCommand):
     help = 'Send a test email'
 
@@ -9,7 +12,7 @@ class Command(BaseCommand):
         send_mail(
             "Subject here",
             "Here is the message.",
-            "nurlan.grachyov@mail.com",
+            os.getenv('EMAIL_HOST_USER'),
             ["nurlan.test_course@mail.ru"],
             fail_silently=False,
         )
