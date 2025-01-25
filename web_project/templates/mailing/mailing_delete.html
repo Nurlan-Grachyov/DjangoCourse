@@ -3,7 +3,9 @@
 {% block content %}
 <div class="container mt-5">
     <h1 class="mb-4">Удалить рассылку для {{ mailing.recipient }}</h1>
-    <p>Вы уверены, что хотите удалить рассылку для {{ mailing.recipient }}?</p>
+    {% for recipient in mailing.recipient.all %}
+    <p>Вы уверены, что хотите удалить рассылку для {{ recipient.fullname }}?</p>
+    {% endfor %}
     <form method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Удалить</button>

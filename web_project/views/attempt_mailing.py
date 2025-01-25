@@ -3,7 +3,7 @@ from django.views.generic import CreateView, ListView, DetailView, UpdateView, D
 
 from web_project.models import AttemptMailing
 
-# web_project:attempt_mailing_list - главная страница для попыток
+
 class AttemptMailingListView(ListView):
     model = AttemptMailing
     template_name = "attempt/attempt_mailing_list.html"

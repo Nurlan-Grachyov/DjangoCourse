@@ -1,7 +1,6 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 
-from web_project.models import Recipient
 
 # web_project:home - общая главная страница
 from django.views.generic import TemplateView

@@ -4,7 +4,6 @@ from django.views.generic import CreateView, ListView, DetailView, UpdateView, D
 from web_project.models import Mailing
 
 
-# web_project:mailing_list- главная страница для рассылок
 class MailingListView(ListView):
     model = Mailing
     template_name = "mailing/mailing_home.html"

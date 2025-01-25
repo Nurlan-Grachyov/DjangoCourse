@@ -3,7 +3,6 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 
 from web_project.models import Message
 
-# web_project:message_list - главная страница для сообщений
 
 class MessageListView(ListView):
     model = Message
