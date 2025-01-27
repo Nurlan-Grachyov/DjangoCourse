@@ -16,7 +16,6 @@ class MessageAdmin(admin.ModelAdmin):
     list_filter = ("subject_letter",)
     search_fields = ("subject_letter",)
 
-
 @admin.register(Mailing)
 class MailingAdmin(admin.ModelAdmin):
     list_display = ("first_sending", "last_sending", "status", "message")

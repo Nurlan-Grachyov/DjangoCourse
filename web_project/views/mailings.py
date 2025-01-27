@@ -19,7 +19,7 @@ class MailingListView(ListView):
 class MailingCreateView(CreateView):
     model = Mailing
     template_name = "mailing/create_update_mailing.html"
-    fields = ["first_sending", "last_sending", "status", "message", "recipient"]
+    fields = ["message", "recipient"]
     success_url = reverse_lazy("web_project:mailing_home")
 
 

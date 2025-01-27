@@ -14,7 +14,7 @@ class Recipient(models.Model):
 
 
 class Message(models.Model):
-    subject_letter = CharField(max_length=100, unique=True)
+    subject_letter = CharField(max_length=100, unique=True, verbose_name="тема")
     body_letter = TextField(verbose_name="комментарий")
 
     class Meta:
@@ -37,9 +37,9 @@ class Mailing(models.Model):
         (STARTED, 'Запущена'),
     ]
 
-    first_sending = DateTimeField(verbose_name='Время начала')
-    last_sending = DateTimeField(verbose_name='Время конца')
-    status = CharField(choices=STATUS_IN_CHOICES, max_length=7, verbose_name='Статус')
+    first_sending = DateTimeField(verbose_name='Время начала', auto_now_add=True, editable=False)
+    last_sending = DateTimeField(verbose_name='Время конца', auto_now_add=True, editable=False)
+    status = CharField(choices=STATUS_IN_CHOICES, max_length=10, verbose_name='Статус', default = 'Создана', editable=False)
     message = ForeignKey(Message, on_delete=models.CASCADE, verbose_name="Сообщение")
     recipient = ManyToManyField(Recipient, related_name='mailings', verbose_name="Клиент")
 
