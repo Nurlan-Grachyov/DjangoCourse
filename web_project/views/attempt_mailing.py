@@ -30,7 +30,7 @@ class AttemptMailingCreateView(CreateView):
     def form_valid(self, form):
         try:
             mailing_id = self.request.POST.get('mailing')
-            call_command('send_email')
+            call_command('send_email', mailing_id=mailing_id)
             mailing_instance = Mailing.objects.get(id=mailing_id)
             AttemptMailing.objects.create(
                 date_attempt=timezone.now(),
