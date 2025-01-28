@@ -13,14 +13,21 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('mailing_id', type=int, help='ID of the mailing')
+        print(parser)
 
     def handle(self, *args, **kwargs):
+        print(parser)
         mailing_id = kwargs['mailing_id']
-        mailing_instance = AttemptMailing.objects.creatget(mailing_id=mailing_id)
+        print(mailing_id)
+        attempt_mailing = AttemptMailing.objects.filter(mailing_id=mailing_id).order_by('-date_attempt').first()
+        if attempt_mailing is None:
+            print("No records found")
         try:
+            # print(attempt_mailing.mailing_id.message.subject_letter)
+            # print(attempt_mailing)
             send_mail(
-                mailing_instance.message.subject_letter,
-                mailing_instance.message.body_letter,
+                attempt_mailing.mailing.message.subject_letter,
+                attempt_mailing.mailing.message.body_letter,
                 # 'TEST',
                 # 'test',
                 os.getenv('EMAIL_HOST_USER'),
@@ -29,4 +36,5 @@ class Command(BaseCommand):
             )
             self.stdout.write('Email sent successfully')
         except Exception as e:
+
             self.stdout.write(f'Failed to send email: {e}')

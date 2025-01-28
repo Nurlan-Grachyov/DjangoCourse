@@ -3,6 +3,7 @@ import time
 from django.core.management import call_command
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.template.context_processors import request
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
@@ -30,19 +31,23 @@ class AttemptMailingCreateView(CreateView):
     def form_valid(self, form):
         try:
             mailing_id = self.request.POST.get('mailing')
+            print(mailing_id)
             call_command('send_email', mailing_id=mailing_id)
+            # call_command('send_email')
             mailing_instance = Mailing.objects.get(id=mailing_id)
+            print(mailing_instance)
             AttemptMailing.objects.create(
                 date_attempt=timezone.now(),
                 status='Успешно',
                 answer='Успешная отправка',
                 mailing=mailing_instance
             )
+            call_command('send_email')
             if not mailing_instance.status == 'Запущена':
                 mailing_instance.status = 'Запущена'
                 mailing_instance.save()
-            return redirect('web_project:attempt_good_create')
-            # return HttpResponse('Страница была успешно создана.')
+            # return redirect('web_project:attempt_good_create')
+            return HttpResponse('Отправка была успешно создана.')
         except Exception as e:
             print(f'Ошибка: {e}')
             return HttpResponse('Произошла ошибка при отправке сообщения.')
