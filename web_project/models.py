@@ -1,5 +1,11 @@
 from django.db import models
-from django.db.models import CharField, TextField, DateTimeField, ForeignKey, ManyToManyField
+from django.db.models import (
+    CharField,
+    DateTimeField,
+    ForeignKey,
+    ManyToManyField,
+    TextField,
+)
 
 
 class Recipient(models.Model):
@@ -27,22 +33,33 @@ class Message(models.Model):
 
 
 class Mailing(models.Model):
-    ENDED = 'ended'
-    CREATED = 'created'
-    STARTED = 'started'
+    ENDED = "ended"
+    CREATED = "created"
+    STARTED = "started"
 
     STATUS_IN_CHOICES = [
-        (ENDED, 'Завершена'),
-        (CREATED, 'Создана'),
-        (STARTED, 'Запущена'),
+        (ENDED, "Завершена"),
+        (CREATED, "Создана"),
+        (STARTED, "Запущена"),
     ]
 
-    first_sending = DateTimeField(verbose_name='Время начала', auto_now_add=True, editable=False)
-    last_sending = DateTimeField(verbose_name='Время конца', auto_now_add=True, editable=False)
-    status = CharField(choices=STATUS_IN_CHOICES, max_length=10, verbose_name='Статус', default = 'Создана', editable=False)
+    first_sending = DateTimeField(
+        verbose_name="Время начала", auto_now_add=True, editable=False
+    )
+    last_sending = DateTimeField(
+        verbose_name="Время конца", auto_now_add=True, editable=False
+    )
+    status = CharField(
+        choices=STATUS_IN_CHOICES,
+        max_length=10,
+        verbose_name="Статус",
+        default="Создана",
+        editable=False,
+    )
     message = ForeignKey(Message, on_delete=models.CASCADE, verbose_name="Сообщение")
-    recipient = ManyToManyField(Recipient, related_name='mailings', verbose_name="Клиент")
-
+    recipient = ManyToManyField(
+        Recipient, related_name="mailings", verbose_name="Клиент"
+    )
 
     class Meta:
         verbose_name = "Рассылка"
@@ -51,18 +68,27 @@ class Mailing(models.Model):
 
 
 class AttemptMailing(models.Model):
-    SUCCESS = 'success'
-    NOT_SUCCESS = 'not success'
+    SUCCESS = "success"
+    NOT_SUCCESS = "not success"
 
     STATUS_IN_CHOICES = [
-        (SUCCESS, 'Успешно'),
-        (NOT_SUCCESS, 'Не успешно'),
+        (SUCCESS, "Успешно"),
+        (NOT_SUCCESS, "Не успешно"),
     ]
 
-    date_attempt = DateTimeField(verbose_name='Дата и время попытки', auto_now_add=True, editable=False)
-    status = CharField(choices=STATUS_IN_CHOICES, max_length=11, verbose_name='Статус', editable=False)
+    date_attempt = DateTimeField(
+        verbose_name="Дата и время попытки", auto_now_add=True, editable=False
+    )
+    status = CharField(
+        choices=STATUS_IN_CHOICES, max_length=11, verbose_name="Статус", editable=False
+    )
     answer = TextField(verbose_name="Ответ почтового сервера", editable=False)
-    mailing = ForeignKey(Mailing, related_name='attempts', verbose_name="Попытка", on_delete=models.CASCADE)
+    mailing = ForeignKey(
+        Mailing,
+        related_name="attempts",
+        verbose_name="Попытка",
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
         verbose_name = "Попытка"

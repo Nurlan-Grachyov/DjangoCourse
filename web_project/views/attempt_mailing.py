@@ -1,15 +1,21 @@
-import time
-
 from django.core.management import call_command
 from django.http import HttpResponse
-from django.shortcuts import redirect
-from django.template.context_processors import request
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView, TemplateView,
+)
 
 from web_project.models import AttemptMailing, Mailing
 
+class AttemptMailingTemplateView(TemplateView):
+    model = AttemptMailing
+    template_name = "attempt/attempt_bad_create.html"
 
 class AttemptMailingDetailView(DetailView):
     model = AttemptMailing
@@ -21,36 +27,30 @@ class AttemptMailingCreateView(CreateView):
     model = AttemptMailing
     template_name = "attempt/create_update_attempt.html"
     fields = ["mailing"]
-    # success_url = reverse_lazy("web_project:attempt_mailing_home")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['mailings'] = Mailing.objects.all()
+        context["mailings"] = Mailing.objects.all()
         return context
 
     def form_valid(self, form):
         try:
-            mailing_id = self.request.POST.get('mailing')
-            print(mailing_id)
-            call_command('send_email', mailing_id=mailing_id)
-            # call_command('send_email')
+            mailing_id = self.request.POST.get("mailing")
+            call_command("send_email", mailing_id)
             mailing_instance = Mailing.objects.get(id=mailing_id)
-            print(mailing_instance)
             AttemptMailing.objects.create(
                 date_attempt=timezone.now(),
-                status='Успешно',
-                answer='Успешная отправка',
-                mailing=mailing_instance
+                status="Успешно",
+                answer="Успешная отправка",
+                mailing=mailing_instance,
             )
-            call_command('send_email')
-            if not mailing_instance.status == 'Запущена':
-                mailing_instance.status = 'Запущена'
+            if not mailing_instance.status == "Запущена":
+                mailing_instance.status = "Запущена"
                 mailing_instance.save()
-            # return redirect('web_project:attempt_good_create')
-            return HttpResponse('Отправка была успешно создана.')
+            return render(self.request, "attempt/attempt_good_create.html")
         except Exception as e:
-            print(f'Ошибка: {e}')
-            return HttpResponse('Произошла ошибка при отправке сообщения.')
+            print(f"Ошибка: {e}")
+            return HttpResponse("Произошла ошибка при отправке сообщения.")
 
 
 class AttemptMailingListView(ListView):

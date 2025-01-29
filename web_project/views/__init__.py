@@ -1,4 +1,4 @@
-from .recipients import *
+from .attempt_mailing import *
 from .mailings import *
 from .messages import *
-from .attempt_mailing import *
+from .recipients import *
