@@ -1,24 +1,25 @@
 from django.urls import path
 
-from web_project.apps import WebProjectConfig
-from web_project.views import (
+from .apps import WebProjectConfig
+from .views import (
     AttemptMailingCreateView,
     AttemptMailingListView,
 )
-from web_project.views.home_page import HomeView
-from web_project.views.mailings import (
+from .views.home_page import HomeView
+from .views.mailings import (
     MailingCreateView,
     MailingDeleteView,
     MailingListView,
     MailingUpdateView,
 )
-from web_project.views.messages import (
+from .views.messages import (
     MessageCreateView,
     MessageDeleteView,
+    MessageDetailView,
     MessageListView,
     MessageUpdateView,
 )
-from web_project.views.recipients import (
+from .views.recipients import (
     RecipientCreateView,
     RecipientDeleteView,
     RecipientListView,
@@ -31,6 +32,7 @@ urlpatterns = [
     path("home/", HomeView.as_view(), name="home"),
     path("recipient_home/", RecipientListView.as_view(), name="recipient_home"),
     path("recipient_create/", RecipientCreateView.as_view(), name="recipient_create"),
+
     path(
         "recipient_update/<int:pk>/",
         RecipientUpdateView.as_view(),
@@ -44,6 +46,9 @@ urlpatterns = [
     path("message_home/", MessageListView.as_view(), name="message_home"),
     path("message_create/", MessageCreateView.as_view(), name="message_create"),
     path(
+        "message_detail/<int:pk>/", MessageDetailView.as_view(), name="message_detail"
+    ),
+    path(
         "message_update/<int:pk>/", MessageUpdateView.as_view(), name="message_update"
     ),
     path(
@@ -51,6 +56,7 @@ urlpatterns = [
     ),
     path("mailing_home/", MailingListView.as_view(), name="mailing_home"),
     path("mailing_create/", MailingCreateView.as_view(), name="mailing_create"),
+
     path(
         "mailing_update/<int:pk>/", MailingUpdateView.as_view(), name="mailing_update"
     ),
