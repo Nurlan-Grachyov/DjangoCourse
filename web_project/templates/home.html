@@ -23,7 +23,7 @@
             {% endfor %}
         </div>
         <div class="col-4">
-            <p>Рассылки - {{ count_all_mailings }} штук</p>
+            <p>Рассылки - {{ count_all_mailings }} штук(и)</p>
             {% for mailing in all_mailings %}
             <div class="card h-10 mt-2 shadow-sm">
                 <div class="card-body d-flex flex-column justify-content-between">
@@ -33,7 +33,7 @@
             {% endfor %}
         </div>
         <div class="col-4">
-            <p>Рассылки со статусом "Запущена" - {{ count_active_mailings }} штук</p>
+            <p>Рассылки со статусом "STARTED" - {{ count_active_mailings }} штук(и)</p>
             {% for active_mailing in active_mailings %}
             <div class="card h-10 mt-2 shadow-sm">
                 <div class="card-body d-flex flex-column justify-content-between">

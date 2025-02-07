@@ -2,7 +2,6 @@ from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
     DeleteView,
-    DetailView,
     ListView,
     UpdateView,
 )
@@ -21,12 +20,6 @@ class RecipientCreateView(CreateView):
     template_name = "recipient/create_update_recipient.html"
     fields = ["email", "fullname", "comment"]
     success_url = reverse_lazy("web_project:recipient_home")
-
-
-class RecipientDetailView(DetailView):
-    model = Recipient
-    template_name = "recipient/recipient_detail.html"
-    context_object_name = "recipient"
 
 
 class RecipientUpdateView(UpdateView):

@@ -1,26 +1,14 @@
-from django.core.management import call_command
-from django.http import HttpResponse
+import os
+
+from django.core.mail import send_mail
 from django.shortcuts import render
-from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import (
     CreateView,
-    DeleteView,
-    DetailView,
     ListView,
-    UpdateView, TemplateView,
 )
 
 from web_project.models import AttemptMailing, Mailing
-
-class AttemptMailingTemplateView(TemplateView):
-    model = AttemptMailing
-    template_name = "attempt/attempt_bad_create.html"
-
-class AttemptMailingDetailView(DetailView):
-    model = AttemptMailing
-    template_name = "attempt/attempt_mailing_detail.html"
-    context_object_name = "attempt"
 
 
 class AttemptMailingCreateView(CreateView):
@@ -34,39 +22,33 @@ class AttemptMailingCreateView(CreateView):
         return context
 
     def form_valid(self, form):
+        """Send a main email"""
         try:
             mailing_id = self.request.POST.get("mailing")
-            call_command("send_email", mailing_id)
             mailing_instance = Mailing.objects.get(id=mailing_id)
+            send_mail(
+                mailing_instance.message.subject_letter,
+                mailing_instance.message.body_letter,
+                os.getenv("EMAIL_HOST_USER"),
+                ["nurlan.test_course@mail.ru"],
+                fail_silently=False,
+            )
             AttemptMailing.objects.create(
                 date_attempt=timezone.now(),
-                status="Успешно",
-                answer="Успешная отправка",
+                status=AttemptMailing.SUCCESS,
+                answer="success sending",
                 mailing=mailing_instance,
             )
-            if not mailing_instance.status == "Запущена":
-                mailing_instance.status = "Запущена"
+            if not mailing_instance.status == Mailing.STARTED:
+                mailing_instance.status = Mailing.STARTED
                 mailing_instance.save()
             return render(self.request, "attempt/attempt_good_create.html")
         except Exception as e:
             print(f"Ошибка: {e}")
-            return HttpResponse("Произошла ошибка при отправке сообщения.")
+            return render(self.request, "attempt/attempt_bad_create.html")
 
 
 class AttemptMailingListView(ListView):
     model = AttemptMailing
     template_name = "attempt/attempt_mailing_home.html"
     context_object_name = "attempts"
-
-
-class AttemptMailingUpdateView(UpdateView):
-    model = AttemptMailing
-    fields = ["mailing"]
-    template_name = "attempt/create_update_attempt.html"
-
-
-class AttemptMailingDeleteView(DeleteView):
-    model = AttemptMailing
-    template_name = "attempt/attempt_mailing_delete.html"
-    context_object_name = "attempt"
-    success_url = reverse_lazy("web_project:attempt_mailing_home")

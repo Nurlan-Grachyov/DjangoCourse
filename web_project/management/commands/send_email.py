@@ -2,7 +2,6 @@ import os
 
 from django.core.mail import send_mail
 from django.core.management.base import BaseCommand
-from django.shortcuts import redirect
 from dotenv import load_dotenv
 
 from web_project.models import AttemptMailing
@@ -34,4 +33,3 @@ class Command(BaseCommand):
             self.stdout.write("Email sent successfully")
         except Exception as e:
             self.stdout.write(f"Failed to send email: {e}")
-

@@ -33,14 +33,14 @@ class Message(models.Model):
 
 
 class Mailing(models.Model):
-    ENDED = "ended"
     CREATED = "created"
     STARTED = "started"
+    ENDED = "ended"
 
     STATUS_IN_CHOICES = [
-        (ENDED, "Завершена"),
         (CREATED, "Создана"),
         (STARTED, "Запущена"),
+        (ENDED, "Завершена"),
     ]
 
     first_sending = DateTimeField(
@@ -53,7 +53,7 @@ class Mailing(models.Model):
         choices=STATUS_IN_CHOICES,
         max_length=10,
         verbose_name="Статус",
-        default="Создана",
+        default=CREATED,
         editable=False,
     )
     message = ForeignKey(Message, on_delete=models.CASCADE, verbose_name="Сообщение")

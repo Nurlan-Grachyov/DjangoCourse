@@ -12,8 +12,8 @@ class HomeView(TemplateView):
         context["recipients"] = Recipient.objects.all()
         context["count_all_mailings"] = Mailing.objects.all().count()
         context["all_mailings"] = Mailing.objects.all()
-        context["active_mailings"] = Mailing.objects.filter(status="Запущена")
+        context["active_mailings"] = Mailing.objects.filter(status=Mailing.STARTED)
         context["count_active_mailings"] = Mailing.objects.filter(
-            status="Запущена"
+            status=Mailing.STARTED
         ).count()
         return context
