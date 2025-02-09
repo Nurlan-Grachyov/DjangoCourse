@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import (
     CharField,
@@ -94,3 +95,12 @@ class AttemptMailing(models.Model):
         verbose_name = "Попытка"
         verbose_name_plural = "Попытки"
         ordering = ["date_attempt", "status", "answer", "mailing"]
+
+
+owner = models.ForeignKey(
+    get_user_model(),
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True,
+    verbose_name='Владелец'
+)
