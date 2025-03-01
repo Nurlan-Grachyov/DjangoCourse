@@ -18,7 +18,7 @@ class RegisterView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        # send_confirmation_email(user)
+        send_confirmation_email(user)
         return super().form_valid(form)
 
 
