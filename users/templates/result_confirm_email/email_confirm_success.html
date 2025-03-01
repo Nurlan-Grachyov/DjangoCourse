@@ -1,0 +1,12 @@
+{% extends 'base_patterns/base.html' %}
+{% block title %}Failed confirm email{% endblock %}
+{% block content %}
+<body>
+    <div class="container">
+        <h1>Успешное подтверждение</h1>
+        <p>Вы успешно подтвердили свою почту</p>
+        <p>Спасибо, что пользуетесь нашим сервисом!</p>
+        <p><a href="{% url 'web_project:home' %}">Вернуться на главную страницу</a></p>
+    </div>
+</body>
+{% endblock %}
