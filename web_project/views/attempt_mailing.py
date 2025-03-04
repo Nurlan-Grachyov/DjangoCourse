@@ -26,23 +26,26 @@ class AttemptMailingCreateView(CreateView):
         mailing_id = self.request.POST.get("mailing")
         mailing_instance = Mailing.objects.get(id=mailing_id)
         try:
-            send_mail(
-                mailing_instance.message.subject_letter,
-                mailing_instance.message.body_letter,
-                os.getenv("EMAIL_HOST_USER"),
-                ["nurlan.test_course@mail.ru"],
-                fail_silently=False,
-            )
-            AttemptMailing.objects.create(
-                date_attempt=timezone.now(),
-                status=AttemptMailing.SUCCESS,
-                answer="success sending",
-                mailing=mailing_instance,
-            )
-            if not mailing_instance.status == Mailing.STARTED:
-                mailing_instance.status = Mailing.STARTED
-                mailing_instance.save()
-            return render(self.request, "attempt/attempt_good_create.html")
+            if mailing_instance.is_Active:
+                send_mail(
+                    mailing_instance.message.subject_letter,
+                    mailing_instance.message.body_letter,
+                    os.getenv("EMAIL_HOST_USER"),
+                    ["nurlan.test_course@mail.ru"],
+                    fail_silently=False,
+                )
+                AttemptMailing.objects.create(
+                    date_attempt=timezone.now(),
+                    status=AttemptMailing.SUCCESS,
+                    answer="success sending",
+                    mailing=mailing_instance,
+                )
+                if not mailing_instance.status == Mailing.STARTED:
+                    mailing_instance.status = Mailing.STARTED
+                    mailing_instance.save()
+                return render(self.request, "attempt/attempt_good_create.html")
+            else:
+                return render(self.request, "attempt/attempt_bad_create.html")
         except SMTPException as e:
             AttemptMailing.objects.create(
                 date_attempt=timezone.now(),
@@ -57,3 +60,12 @@ class AttemptMailingListView(ListView):
     model = AttemptMailing
     template_name = "attempt/attempt_mailing_home.html"
     context_object_name = "attempts"
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        started_mailings = Mailing.objects.filter(status=Mailing.CREATED, owner=self.request.user)
+        context['started_mailings'] = AttemptMailing.objects.filter(mailing__in=started_mailings, owner=self.request.user).count()
+        context['count_attempts_mailings'] = AttemptMailing.objects.filter(owner=self.request.user).count()
+        context['count_success_attempts_mailings'] = AttemptMailing.objects.filter(status=AttemptMailing.SUCCESS, owner=self.request.user).count()
+        context['count_not_success_attempts_mailings'] = AttemptMailing.objects.filter(status=AttemptMailing.NOT_SUCCESS, owner=self.request.user).count()
+        return context

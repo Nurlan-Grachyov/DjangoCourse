@@ -1,3 +1,5 @@
+from tkinter.constants import CASCADE
+
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import (
@@ -5,14 +7,25 @@ from django.db.models import (
     DateTimeField,
     ForeignKey,
     ManyToManyField,
-    TextField,
+    TextField, Model, BooleanField,
 )
+
+from config.settings import AUTH_USER_MODEL
 
 
 class Recipient(models.Model):
     email = CharField(max_length=100, unique=True)
     fullname = CharField(max_length=100)
     comment = TextField(verbose_name="комментарий")
+    owner = ForeignKey(
+        AUTH_USER_MODEL,
+        verbose_name="Создатель клиента",
+        help_text="Укажите создателя клиента",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
+
 
     class Meta:
         verbose_name = "Клиент"
@@ -61,6 +74,15 @@ class Mailing(models.Model):
     recipient = ManyToManyField(
         Recipient, related_name="mailings", verbose_name="Клиент"
     )
+    owner = ForeignKey(
+        AUTH_USER_MODEL,
+        verbose_name="Владелец рассылки",
+        help_text="Укажите владельца рассылки",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
+    is_active = BooleanField(default=True)
 
     class Meta:
         verbose_name = "Рассылка"
@@ -88,6 +110,14 @@ class AttemptMailing(models.Model):
         Mailing,
         related_name="attempts",
         verbose_name="Попытка",
+        on_delete=models.CASCADE,
+    )
+    owner = ForeignKey(
+        AUTH_USER_MODEL,
+        verbose_name="Владелец попытки рассылки",
+        help_text="Укажите владельца попытки рассылки",
+        blank=True,
+        null=True,
         on_delete=models.CASCADE,
     )
 

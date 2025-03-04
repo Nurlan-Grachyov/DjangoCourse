@@ -3,8 +3,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from phonenumber_field.formfields import PhoneNumberField
 
-from users.models import CustomUser
-
 
 class BaseUserForm(forms.ModelForm):
     phone_number = PhoneNumberField(required=False)
