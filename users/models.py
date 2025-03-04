@@ -38,12 +38,12 @@ class CustomUser(AbstractUser):
         return self.email
 
 
-class ChangeInfo(UserChangeForm):
-    email = models.EmailField(unique=True, verbose_name="Email")
-
-    class Meta:
-        verbose_name = "Emails"
-        verbose_name_plural = "Email"
-
-    def __str__(self):
-        return self.email
+# class ChangeInfo(UserChangeForm):
+#     email = models.EmailField(unique=True, verbose_name="Email")
+#
+#     class Meta:
+#         verbose_name = "Emails"
+#         verbose_name_plural = "Email"
+#
+#     def __str__(self):
+#         return self.email
