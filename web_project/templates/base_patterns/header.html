@@ -1,0 +1,51 @@
+<header data-bs-theme="dark">
+    <div class="collapse text-bg-dark" id="navbarHeader">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-md-7 py-4">
+                    <h4>About</h4>
+                    <p class="text-body-secondary">The service, that can do sending email. </p>
+                </div>
+                <div class="col-sm-4 offset-md-1 py-4">
+                    <ul class="list-unstyled">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'my_users:logout' %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-link nav-link">Выйти
+                                </button>
+                            </form>
+                            <p>Вы вошли как {{user}}</p>
+                        </li>
+
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my_users:login' %}">Войти</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my_users:register' %}">Регистрация</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container d-flex">
+            <a href="{% url 'web_project:home' %}" class="navbar-brand d-flex align-items-center">Главная</a>
+            <a href="{% url 'web_project:recipient_home' %}" class="navbar-brand d-flex align-items-center">Управление
+                клиентами</a>
+            <a href="{% url 'web_project:message_home' %}" class="navbar-brand d-flex align-items-center">Управление
+                сообщениями</a>
+            <a href="{% url 'web_project:mailing_home' %}" class="navbar-brand d-flex align-items-center">Управление
+                рассылками</a>
+            <a href="{% url 'web_project:attempt_mailing_home' %}" class="navbar-brand d-flex align-items-center">Отправка
+                сообщений</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
+                    aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
