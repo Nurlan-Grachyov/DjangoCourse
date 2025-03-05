@@ -1,5 +1,7 @@
 import os
 from smtplib import SMTPException
+
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.shortcuts import render
 from django.utils import timezone
@@ -56,7 +58,7 @@ class AttemptMailingCreateView(CreateView):
             return render(self.request, "attempt/attempt_bad_create.html")
 
 
-class AttemptMailingListView(ListView):
+class AttemptMailingListView(LoginRequiredMixin, ListView):
     model = AttemptMailing
     template_name = "attempt/attempt_mailing_home.html"
     context_object_name = "attempts"

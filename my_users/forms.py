@@ -32,15 +32,3 @@ class RegisterForm(BaseUserForm, UserCreationForm):
         self.fields["password2"].help_text = (
             "Input the same password as before for check your person"
         )
-
-
-# class PasswordResetForm(forms.ModelForm):
-#     email = forms.EmailField(label='Email', max_length=100)
-#
-#     class Meta:
-#         model = ChangeInfo
-#         fields = ['email']
-#
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         self.fields['email'].widget.attrs.update({"class": "form-control", "placeholder": "Input your email"})

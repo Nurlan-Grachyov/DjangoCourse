@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import (
@@ -15,18 +16,20 @@ logging.basicConfig(
     level=logging.DEBUG)
 
 
-class MailingListView(ListView):
+class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
     template_name = "mailing/mailing_home.html"
     context_object_name = "mailings"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["all_mailings"] = Mailing.objects.filter(owner=self.request.user).count()
-        context["created_mailings"] = Mailing.objects.filter(status=Mailing.CREATED, owner=self.request.user).count()
-        context["active_mailings"] = Mailing.objects.filter(status=Mailing.STARTED, owner=self.request.user).count()
-        context["ended_mailings"] = Mailing.objects.filter(status=Mailing.ENDED, owner=self.request.user).count()
-
+        if self.request.user.is_authenticated:
+            context["all_mailings"] = Mailing.objects.filter(owner=self.request.user).count()
+            context["created_mailings"] = Mailing.objects.filter(status=Mailing.CREATED, owner=self.request.user).count()
+            context["active_mailings"] = Mailing.objects.filter(status=Mailing.STARTED, owner=self.request.user).count()
+            context["ended_mailings"] = Mailing.objects.filter(status=Mailing.ENDED, owner=self.request.user).count()
+        else:
+            return context
         return context
 
     def get_queryset(self):

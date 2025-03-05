@@ -10,7 +10,7 @@
                     <ul class="list-unstyled">
                         {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <form method="post" action="{% url 'users:logout' %}" style="display: inline;">
+                            <form method="post" action="{% url 'my_users:logout' %}" style="display: inline;">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-link nav-link">Выйти
                                 </button>
@@ -20,10 +20,10 @@
 
                         {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'users:login' %}">Войти</a>
+                            <a class="nav-link" href="{% url 'my_users:login' %}">Войти</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'users:register' %}">Регистрация</a>
+                            <a class="nav-link" href="{% url 'my_users:register' %}">Регистрация</a>
                         </li>
                         {% endif %}
                     </ul>

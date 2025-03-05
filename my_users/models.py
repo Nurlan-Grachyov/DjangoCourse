@@ -1,4 +1,3 @@
-from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import BooleanField, CharField
@@ -36,14 +35,3 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
-
-
-# class ChangeInfo(UserChangeForm):
-#     email = models.EmailField(unique=True, verbose_name="Email")
-#
-#     class Meta:
-#         verbose_name = "Emails"
-#         verbose_name_plural = "Email"
-#
-#     def __str__(self):
-#         return self.email
