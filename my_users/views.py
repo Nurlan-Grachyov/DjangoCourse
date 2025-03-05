@@ -8,12 +8,12 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, FormView
 
 from config.settings import EMAIL_HOST_USER
-from users.forms import RegisterForm
+from .forms import RegisterForm
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import render
 
-from users.management.commands.email_confirmation import send_confirmation_email
+from .management.commands.email_confirmation import send_confirmation_email
 
 logging.basicConfig(
     level=logging.DEBUG)
@@ -22,7 +22,7 @@ logging.basicConfig(
 class RegisterView(CreateView):
     form_class = RegisterForm
     template_name = 'registration/register.html'
-    success_url = reverse_lazy("users:login")
+    success_url = reverse_lazy("my_users:login")
 
     def form_valid(self, form):
         user = form.save()
@@ -67,7 +67,7 @@ class CustomLoginView(LoginView):
 # class PasswordResetViewMy(FormView):
 #     form_class = PasswordResetForm
 #     template_name = "registration/password_reset_form.html"
-#     success_url = reverse_lazy('users:password_reset_done')
+#     success_url = reverse_lazy('my_users:password_reset_done')
 #     from_email = None
 #     token_generator = default_token_generator
 #
@@ -75,7 +75,7 @@ class CustomLoginView(LoginView):
 #         logging.debug('good')
 #         user = form.save()
 #         logging.debug(user)
-#         link = f"http://localhost:8000{reverse('users:password_reset_done', kwargs={'uidb64': user.pk, 'token': self.token_generator})}"
+#         link = f"http://localhost:8000{reverse('my_users:password_reset_done', kwargs={'uidb64': user.pk, 'token': self.token_generator})}"
 #         send_mail(
 #             'Смена пароля',
 #             f'Перейдите по ссылке для подтверждения: {link}',

@@ -15,7 +15,7 @@ def send_confirmation_email(user):
     logging.debug(token)
     logging.debug(user)
     logging.debug(default_token_generator.check_token(user, token))
-    link = f"http://localhost:8000{reverse('users:confirm_email', kwargs={'uidb64': user.pk, 'token': token})}"
+    link = f"http://localhost:8000{reverse('my_users:confirm_email', kwargs={'uidb64': user.pk, 'token': token})}"
     logging.debug('link good')
     send_mail(
         'Подтвердите ваш email',
