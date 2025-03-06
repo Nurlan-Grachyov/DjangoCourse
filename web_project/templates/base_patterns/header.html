@@ -26,6 +26,11 @@
                             <a class="nav-link" href="{% url 'my_users:register' %}">Регистрация</a>
                         </li>
                         {% endif %}
+                        {% if is_in_group %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my_users:users_list' %}">Список пользователей</a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

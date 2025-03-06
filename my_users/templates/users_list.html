@@ -1,0 +1,11 @@
+{% extends 'base_patterns/base.html' %}
+{% block title %}Домашняя страница{% endblock %}
+{% block content %}
+{% include 'base_patterns/header.html' %}
+{% if is_in_group %}
+<h4>Список пользователей</h4>
+{% for user in users%}
+<p class="card-title">{{ user.email }}</p>
+{% endfor %}
+{% endif %}
+{% endblock %}
