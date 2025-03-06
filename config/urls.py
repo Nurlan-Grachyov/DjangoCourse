@@ -21,7 +21,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-path("admin/", admin.site.urls),
-path("web/", include("web_project.urls", namespace="web_project")),
-path("my_users/", include("my_users.urls", namespace="my_users")),
+    path("admin/", admin.site.urls),
+    path("web/", include("web_project.urls", namespace="web_project")),
+    path("my_users/", include("my_users.urls", namespace="my_users")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
