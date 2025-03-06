@@ -9,12 +9,18 @@ class HomeView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["count_recipients"] = Recipient.objects.all().count()
-        context["recipients"] = Recipient.objects.all()
-        context["count_all_mailings"] = Mailing.objects.all().count()
-        context["all_mailings"] = Mailing.objects.all()
-        context["active_mailings"] = Mailing.objects.filter(status=Mailing.STARTED)
+        context["count_recipients"] = Recipient.objects.filter(
+            owner=self.request.user
+        ).count()
+        context["recipients"] = Recipient.objects.filter(owner=self.request.user)
+        context["count_all_mailings"] = Mailing.objects.filter(
+            owner=self.request.user
+        ).count()
+        context["all_mailings"] = Mailing.objects.filter(owner=self.request.user)
+        context["active_mailings"] = Mailing.objects.filter(
+            status=Mailing.STARTED, owner=self.request.user
+        )
         context["count_active_mailings"] = Mailing.objects.filter(
-            status=Mailing.STARTED
+            status=Mailing.STARTED, owner=self.request.user
         ).count()
         return context

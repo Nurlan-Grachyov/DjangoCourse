@@ -7,7 +7,9 @@ from django.db.models import (
     DateTimeField,
     ForeignKey,
     ManyToManyField,
-    TextField, Model, BooleanField,
+    TextField,
+    Model,
+    BooleanField,
 )
 
 from config.settings import AUTH_USER_MODEL
@@ -26,7 +28,6 @@ class Recipient(models.Model):
         on_delete=models.CASCADE,
     )
 
-
     class Meta:
         verbose_name = "Клиент"
         verbose_name_plural = "Клиенты"
@@ -36,6 +37,14 @@ class Recipient(models.Model):
 class Message(models.Model):
     subject_letter = CharField(max_length=100, unique=True, verbose_name="тема")
     body_letter = TextField(verbose_name="комментарий")
+    owner = ForeignKey(
+        AUTH_USER_MODEL,
+        verbose_name="Владелец рассылки",
+        help_text="Укажите владельца рассылки",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
         verbose_name = "Письмо"
@@ -82,12 +91,13 @@ class Mailing(models.Model):
         null=True,
         on_delete=models.CASCADE,
     )
-    is_active = BooleanField(default=True)
+    is_active = BooleanField(default=True, blank=True, null=True)
 
     class Meta:
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
         ordering = ["first_sending", "last_sending", "status"]
+        permissions = [("can_disabling_mailings", "can disabling mailings")]
 
 
 class AttemptMailing(models.Model):
@@ -132,5 +142,5 @@ owner = models.ForeignKey(
     on_delete=models.SET_NULL,
     null=True,
     blank=True,
-    verbose_name='Владелец'
+    verbose_name="Владелец",
 )

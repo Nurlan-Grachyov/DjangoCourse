@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "web_project",
-    "phonenumber_field"
+    "phonenumber_field",
 ]
 
 MIDDLEWARE = [
@@ -142,6 +142,6 @@ DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")
 
 AUTH_USER_MODEL = "my_users.CustomUser"
 
-LOGIN_REDIRECT_URL = 'web_project:home'
-LOGOUT_REDIRECT_URL = 'web_project:home'
-LOGIN_URL = 'my_users:login'
+LOGIN_REDIRECT_URL = "web_project:home"
+LOGOUT_REDIRECT_URL = "web_project:home"
+LOGIN_URL = "my_users:login"

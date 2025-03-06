@@ -4,20 +4,19 @@ from django.contrib.auth.forms import UserCreationForm
 from phonenumber_field.formfields import PhoneNumberField
 
 
-
 class BaseUserForm(forms.ModelForm):
     phone_number = PhoneNumberField(required=False)
 
     class Meta:
         model = get_user_model()
-        fields = ['email', 'phone_number']
+        fields = ["email", "phone_number"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['email'].widget.attrs.update(
+        self.fields["email"].widget.attrs.update(
             {"class": "form-control", "placeholder": "Input your email"}
         )
-        self.fields['phone_number'].widget.attrs.update(
+        self.fields["phone_number"].widget.attrs.update(
             {"class": "form-control", "placeholder": "You can input your phone number"}
         )
 

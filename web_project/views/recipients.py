@@ -7,7 +7,7 @@ from django.views.generic import (
     UpdateView,
 )
 
-from ..models import Recipient
+from ..models import Recipient, Message
 
 
 class RecipientListView(LoginRequiredMixin, ListView):
@@ -21,6 +21,10 @@ class RecipientCreateView(CreateView):
     template_name = "recipient/create_update_recipient.html"
     fields = ["email", "fullname", "comment"]
     success_url = reverse_lazy("web_project:recipient_home")
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
 
 class RecipientUpdateView(UpdateView):

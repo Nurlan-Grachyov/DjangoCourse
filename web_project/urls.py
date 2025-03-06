@@ -32,7 +32,6 @@ urlpatterns = [
     path("home/", HomeView.as_view(), name="home"),
     path("recipient_home/", RecipientListView.as_view(), name="recipient_home"),
     path("recipient_create/", RecipientCreateView.as_view(), name="recipient_create"),
-
     path(
         "recipient_update/<int:pk>/",
         RecipientUpdateView.as_view(),
@@ -56,7 +55,6 @@ urlpatterns = [
     ),
     path("mailing_home/", MailingListView.as_view(), name="mailing_home"),
     path("mailing_create/", MailingCreateView.as_view(), name="mailing_create"),
-
     path(
         "mailing_update/<int:pk>/", MailingUpdateView.as_view(), name="mailing_update"
     ),
