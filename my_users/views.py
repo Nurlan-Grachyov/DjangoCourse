@@ -2,13 +2,14 @@ import logging
 
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.views import LoginView
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse
 from django.urls import reverse_lazy
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, UpdateView
 
-from .forms import RegisterForm
+from .forms import RegisterForm, OwnerUserForm, ManagerUserForm
 from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -32,9 +33,39 @@ class RegisterView(CreateView):
         return super().form_valid(form)
 
 
+class UserUpdateView(UpdateView):
+    model = CustomUser
+    form_class = OwnerUserForm
+    template_name = 'crud/update_user.html'
+    success_url = reverse_lazy("web_project:mailing_home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        logging.debug(self.request.user.pk)
+        context['pk'] = self.request.user.pk
+        return context
+
+
+class ManagerUserUpdateView(UpdateView):
+    model = CustomUser
+    template_name = 'crud/update_user.html'
+    success_url = reverse_lazy("web_project:mailing_home")
+
+    def get_form_class(self):
+        user = self.request.user
+        logging.debug(user)
+        if user.groups.filter(name='managers').exists():
+            logging.debug("ManagerUserForm")
+            return ManagerUserForm
+        elif user == self.object.owner:
+            logging.debug("OwnerUserForm")
+            return OwnerUserForm
+        raise PermissionDenied
+
+
 class UsersListView(ListView):
     model = CustomUser
-    template_name = "users_list.html"
+    template_name = "crud/users_list.html"
     context_object_name = 'users'
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -46,6 +77,7 @@ class UsersListView(ListView):
             ).exists()
             context["all_users"] = CustomUser.objects.all()
         return context
+
 
 def activate(request, uidb64, token):
     try:
@@ -73,17 +105,16 @@ class CustomLoginView(LoginView):
         login(self.request, user)
         return HttpResponseRedirect(self.get_success_url())
 
-
-class BlockUser(View):
-    def post(self, request, *args, **kwargs):
-        user_id = kwargs.get("user_id")
-        if not user_id:
-            raise ValueError("Missing required parameter 'pk'")
-        user = CustomUser.objects.get(id=user_id)
-
-        if request.user.has_perm("my_users:can_block_user"):
-            user.is_active = False
-        else:
-            return HttpResponseForbidden("You don't have enough rights")
-
-        return redirect("web_project:home")
+# class BlockUser(View):
+#     def post(self, request, *args, **kwargs):
+#         user_id = kwargs.get("user_id")
+#         if not user_id:
+#             raise ValueError("Missing required parameter 'pk'")
+#         user = CustomUser.objects.get(id=user_id)
+#
+#         if request.user.has_perm("my_users:can_block_user"):
+#             user.is_active = False
+#         else:
+#             return HttpResponseForbidden("You don't have enough rights")
+#
+#         return redirect("web_project:home")

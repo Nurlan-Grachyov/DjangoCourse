@@ -112,12 +112,12 @@ class MailingUpdateView(UpdateView):
     def get_form_class(self):
         user = self.request.user
         logging.debug(user)
-        if user == self.object.owner:
-            logging.debug("OwnerMailingForm")
-            return OwnerMailingForm
-        elif user.has_perm("web_project:can_disabling_mailings"):
+        if user.groups.filter(name='managers').exists():
             logging.debug("ManagerMailingForm")
             return ManagerMailingForm
+        elif user == self.object.owner:
+            logging.debug("OwnerMailingForm")
+            return OwnerMailingForm
         raise PermissionDenied
 
 

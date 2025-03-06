@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from phonenumber_field.formfields import PhoneNumberField
 
+from my_users.models import CustomUser
+
 
 class BaseUserForm(forms.ModelForm):
     phone_number = PhoneNumberField(required=False)
@@ -31,3 +33,15 @@ class RegisterForm(BaseUserForm, UserCreationForm):
         self.fields["password2"].help_text = (
             "Input the same password as before for check your person"
         )
+
+
+class OwnerUserForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'phone_number']
+
+
+class ManagerUserForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ["is_active"]

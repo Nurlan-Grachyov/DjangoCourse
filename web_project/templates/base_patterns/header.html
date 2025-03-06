@@ -31,6 +31,9 @@
                             <a class="nav-link" href="{% url 'my_users:users_list' %}">Список пользователей</a>
                         </li>
                         {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my_users:users_update' pk=pk %}">Редактирование профиля</a>
+                        </li>
                     </ul>
                 </div>
             </div>
