@@ -1,10 +1,7 @@
 from django.urls import path
 
 from .apps import WebProjectConfig
-from .views import (
-    AttemptMailingCreateView,
-    AttemptMailingListView,
-)
+from .views import AttemptMailingCreateView, AttemptMailingListView
 from .views.home_page import HomeView
 from .views.mailings import (
     MailingCreateView,

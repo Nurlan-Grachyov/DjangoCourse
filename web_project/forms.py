@@ -1,6 +1,7 @@
 import logging
 
 from django import forms
+
 from .models import Mailing, Message, Recipient
 
 logging.basicConfig(level=logging.DEBUG)

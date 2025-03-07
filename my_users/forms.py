@@ -38,7 +38,7 @@ class RegisterForm(BaseUserForm, UserCreationForm):
 class OwnerUserForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'phone_number']
+        fields = ["username", "email", "phone_number"]
 
 
 class ManagerUserForm(forms.ModelForm):

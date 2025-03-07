@@ -1,21 +1,15 @@
 import logging
 
-from django.contrib.auth import login, get_user_model
+from django.contrib.auth import login
+from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.utils.http import urlsafe_base64_decode
-from django.views import View
 from django.views.generic import CreateView, ListView, UpdateView
 
-from .forms import RegisterForm, OwnerUserForm, ManagerUserForm
-from django.contrib.auth.tokens import default_token_generator
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-
-from .management.commands.email_confirmation import send_activation_email
-# from .management.commands.email_confirmation import send_confirmation_email
+from .forms import ManagerUserForm, OwnerUserForm, RegisterForm
 from .models import CustomUser
 
 logging.basicConfig(level=logging.DEBUG)
@@ -36,25 +30,25 @@ class RegisterView(CreateView):
 class UserUpdateView(UpdateView):
     model = CustomUser
     form_class = OwnerUserForm
-    template_name = 'crud/update_user.html'
+    template_name = "crud/update_user.html"
     success_url = reverse_lazy("web_project:mailing_home")
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        logging.debug(self.request.user.pk)
-        context['pk'] = self.request.user.pk
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     print(self.request.user.pk)
+    #     context['pk'] = self.request.user.pk
+    #     return context
 
 
 class ManagerUserUpdateView(UpdateView):
     model = CustomUser
-    template_name = 'crud/update_user.html'
+    template_name = "crud/manager_update_user.html"
     success_url = reverse_lazy("web_project:mailing_home")
 
     def get_form_class(self):
         user = self.request.user
         logging.debug(user)
-        if user.groups.filter(name='managers').exists():
+        if user.groups.filter(name="managers").exists():
             logging.debug("ManagerUserForm")
             return ManagerUserForm
         elif user == self.object.owner:
@@ -66,7 +60,7 @@ class ManagerUserUpdateView(UpdateView):
 class UsersListView(ListView):
     model = CustomUser
     template_name = "crud/users_list.html"
-    context_object_name = 'users'
+    context_object_name = "users"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -91,9 +85,11 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return redirect('my_users:login')
+        return redirect("my_users:login")
     else:
-        return HttpResponse('The confirmation link was invalid, possibly because it has already been used.')
+        return HttpResponse(
+            "The confirmation link was invalid, possibly because it has already been used."
+        )
 
 
 class CustomLoginView(LoginView):
@@ -104,6 +100,7 @@ class CustomLoginView(LoginView):
             return self.form_invalid(form)
         login(self.request, user)
         return HttpResponseRedirect(self.get_success_url())
+
 
 # class BlockUser(View):
 #     def post(self, request, *args, **kwargs):

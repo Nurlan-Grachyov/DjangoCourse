@@ -1,13 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    ListView,
-    UpdateView,
-)
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from ..models import Recipient, Message
+from ..models import Message, Recipient
 
 
 class RecipientListView(LoginRequiredMixin, ListView):

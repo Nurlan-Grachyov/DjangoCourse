@@ -1,17 +1,11 @@
 import logging
-from smtplib import SMTPException
 
-from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from django.http import HttpResponseForbidden
-from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode
 
 from config.settings import EMAIL_HOST_USER
-from my_users.models import CustomUser
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -22,12 +16,12 @@ def send_activation_email(user, request):
     logging.debug(user)
     logging.debug(token)
     logging.debug(default_token_generator.check_token(user, token))
-    activation_link = f"http://localhost:8000{reverse('my_users:confirm_email', kwargs={'uidb64': uid, 'token': token})}"
-    subject = 'Активируйте ваш аккаунт'
-    message = render_to_string('activation.txt', {
-        'user': user,
-        'activation_link': activation_link
-    })
+    activation_link = f"http://localhost:8000{reverse('my_users:confirm_email', kwargs={'uidb64': uid,
+                                                                                        'token': token})}"
+    subject = "Активируйте ваш аккаунт"
+    message = render_to_string(
+        "activation.txt", {"user": user, "activation_link": activation_link}
+    )
     send_mail(subject, message, EMAIL_HOST_USER, [user.email], fail_silently=False)
     logging.debug(user)
     logging.debug(token)

@@ -1,17 +1,13 @@
+import logging
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    ListView,
-    UpdateView,
-)
-import logging
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from web_project.forms import OwnerMailingForm, ManagerMailingForm
-from web_project.models import Mailing, AttemptMailing
+from web_project.forms import ManagerMailingForm, OwnerMailingForm
+from web_project.models import AttemptMailing, Mailing
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -112,7 +108,7 @@ class MailingUpdateView(UpdateView):
     def get_form_class(self):
         user = self.request.user
         logging.debug(user)
-        if user.groups.filter(name='managers').exists():
+        if user.groups.filter(name="managers").exists():
             logging.debug("ManagerMailingForm")
             return ManagerMailingForm
         elif user == self.object.owner:

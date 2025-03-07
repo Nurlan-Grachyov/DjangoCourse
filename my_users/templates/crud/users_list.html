@@ -2,10 +2,22 @@
 {% block title %}Домашняя страница{% endblock %}
 {% block content %}
 {% include 'base_patterns/header.html' %}
-{% if is_in_group %}
-<h4>Список пользователей</h4>
-{% for user in users%}
-<p class="card-title">{{ user.email }}</p>
-{% endfor %}
-{% endif %}
+<h4 class="mt-3" style="text-align: center; margin-bottom: 32px;">Список пользователей</h4>
+<div class="album py-5 bg-body-tertiary container">
+    <div class="row cards-container">
+        {% for user in users %}
+        <div class="col-12 col-md-4 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <p class="card-title">{{ user.email }}</p>
+                    <div class="d-flex justify-content-end mt-auto">
+                        <a href="{% url 'my_users:manager_users_update' pk=user.pk %}" type="submit"
+                           class="btn btn-sm btn-block btn-outline-primary me-2">Редактировать</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
