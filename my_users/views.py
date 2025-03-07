@@ -33,11 +33,11 @@ class UserUpdateView(UpdateView):
     template_name = "crud/update_user.html"
     success_url = reverse_lazy("web_project:mailing_home")
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     print(self.request.user.pk)
-    #     context['pk'] = self.request.user.pk
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(self.request.user.pk)
+        context['pk'] = self.request.user.pk
+        return context
 
 
 class ManagerUserUpdateView(UpdateView):
