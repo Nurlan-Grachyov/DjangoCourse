@@ -2,12 +2,12 @@ import logging
 
 from django.contrib.auth import login
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordContextMixin
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView, ListView, UpdateView, FormView
 
 from .forms import ManagerUserForm, OwnerUserForm, RegisterForm
 from .models import CustomUser
@@ -100,3 +100,7 @@ class CustomLoginView(LoginView):
             return self.form_invalid(form)
         login(self.request, user)
         return HttpResponseRedirect(self.get_success_url())
+
+
+class PasswordResetView(PasswordContextMixin, FormView):
+    success_url = reverse_lazy('my_users:password_reset_done')

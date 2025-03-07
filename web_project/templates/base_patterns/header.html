@@ -17,6 +17,9 @@
                             </form>
                             <p>Вы вошли как {{user}}</p>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my_users:password_reset' %}">Сброс пароля</a>
+                        </li>
                         {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'my_users:login' %}">Войти</a>

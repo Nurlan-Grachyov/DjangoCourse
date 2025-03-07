@@ -68,4 +68,5 @@ urlpatterns = [
         AttemptMailingCreateView.as_view(),
         name="attempt_mailing_create",
     ),
+
 ]
