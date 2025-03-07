@@ -100,18 +100,3 @@ class CustomLoginView(LoginView):
             return self.form_invalid(form)
         login(self.request, user)
         return HttpResponseRedirect(self.get_success_url())
-
-
-# class BlockUser(View):
-#     def post(self, request, *args, **kwargs):
-#         user_id = kwargs.get("user_id")
-#         if not user_id:
-#             raise ValueError("Missing required parameter 'pk'")
-#         user = CustomUser.objects.get(id=user_id)
-#
-#         if request.user.has_perm("my_users:can_block_user"):
-#             user.is_active = False
-#         else:
-#             return HttpResponseForbidden("You don't have enough rights")
-#
-#         return redirect("web_project:home")

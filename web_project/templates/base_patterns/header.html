@@ -17,7 +17,6 @@
                             </form>
                             <p>Вы вошли как {{user}}</p>
                         </li>
-
                         {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'my_users:login' %}">Войти</a>
@@ -31,7 +30,6 @@
                             <a class="nav-link" href="{% url 'my_users:users_list' %}">Список пользователей</a>
                         </li>
                         {% endif %}
-<!--
                     </ul>
                 </div>
             </div>
@@ -49,11 +47,11 @@
                 рассылками</a>
             <a href="{% url 'web_project:attempt_mailing_home' %}" class="navbar-brand d-flex align-items-center">Отправка
                 сообщений</a>
+            {% endif %}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
                     aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            {% endif %}
         </div>
     </div>
 </header>
