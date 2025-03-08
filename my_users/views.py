@@ -2,13 +2,15 @@ import logging
 
 from django.contrib.auth import login
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.views import LoginView, PasswordContextMixin
+from django.contrib.auth.views import LoginView, PasswordContextMixin, PasswordResetView, PasswordResetConfirmView, \
+    PasswordResetCompleteView
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect
+from django.shortcuts import redirect, resolve_url
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView, FormView
+from django.views.generic import CreateView, ListView, UpdateView, FormView, TemplateView
 
+from config import settings
 from .forms import ManagerUserForm, OwnerUserForm, RegisterForm
 from .models import CustomUser
 
@@ -33,11 +35,11 @@ class UserUpdateView(UpdateView):
     template_name = "crud/update_user.html"
     success_url = reverse_lazy("web_project:mailing_home")
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     print(self.request.user.pk)
-    #     context['pk'] = self.request.user.pk
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(self.request.user.pk)
+        context['pk'] = self.request.user.pk
+        return context
 
 
 class ManagerUserUpdateView(UpdateView):
@@ -102,5 +104,15 @@ class CustomLoginView(LoginView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class PasswordResetView(PasswordContextMixin, FormView):
+class PasswordResetViewMy(PasswordResetView, PasswordContextMixin, FormView):
     success_url = reverse_lazy('my_users:password_reset_done')
+
+class PasswordResetConfirmViewMy(PasswordResetConfirmView, PasswordContextMixin, FormView):
+    success_url = reverse_lazy('my_users:password_reset_complete')
+
+class PasswordResetCompleteViewMy(PasswordResetCompleteView, PasswordContextMixin, TemplateView):
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["login_url"] = resolve_url(f'my_users:{settings.LOGIN_URL}')
+        return context

@@ -1,5 +1,6 @@
 from django.urls import path
 
+from my_users.views import UserUpdateView
 from .apps import WebProjectConfig
 from .views import AttemptMailingCreateView, AttemptMailingListView
 from .views.home_page import HomeView
@@ -68,5 +69,7 @@ urlpatterns = [
         AttemptMailingCreateView.as_view(),
         name="attempt_mailing_create",
     ),
-
+    path(
+        "update_users/<int:pk>", UserUpdateView.as_view(), name="users_update"
+    ),
 ]

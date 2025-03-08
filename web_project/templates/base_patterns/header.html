@@ -18,6 +18,9 @@
                             <p>Вы вошли как {{user}}</p>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my_users:users_update' pk=request.user.pk %}">Редактирование профиля</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'my_users:password_reset' %}">Сброс пароля</a>
                         </li>
                         {% else %}
