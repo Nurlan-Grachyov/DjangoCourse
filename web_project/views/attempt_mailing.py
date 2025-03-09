@@ -5,10 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.shortcuts import render
 from django.utils import timezone
-from django.views.generic import (
-    CreateView,
-    ListView,
-)
+from django.views.generic import CreateView, ListView
 
 from web_project.models import AttemptMailing, Mailing
 

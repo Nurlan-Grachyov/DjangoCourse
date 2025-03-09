@@ -1,15 +1,12 @@
-from tkinter.constants import CASCADE
-
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import (
+    BooleanField,
     CharField,
     DateTimeField,
     ForeignKey,
     ManyToManyField,
     TextField,
-    Model,
-    BooleanField,
 )
 
 from config.settings import AUTH_USER_MODEL

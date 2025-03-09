@@ -1,17 +1,17 @@
 import logging
 
-from django.contrib.auth import login, get_user_model
-from django.contrib.auth.views import LoginView
-from django.http import HttpResponseRedirect, HttpResponseForbidden
-from django.urls import reverse_lazy
-from django.views import View
-from django.views.generic import CreateView, ListView
-
-from .forms import RegisterForm
+from django.contrib.auth import login
 from django.contrib.auth.tokens import default_token_generator
-from django.shortcuts import render, redirect
+from django.contrib.auth.views import LoginView, PasswordContextMixin, PasswordResetView, PasswordResetConfirmView, \
+    PasswordResetCompleteView
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect, resolve_url
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, ListView, UpdateView, FormView, TemplateView
 
-from .management.commands.email_confirmation import send_confirmation_email
+from config import settings
+from .forms import ManagerUserForm, OwnerUserForm, RegisterForm
 from .models import CustomUser
 
 logging.basicConfig(level=logging.DEBUG)
@@ -24,43 +24,74 @@ class RegisterView(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-        # user.is_active = True
-        send_confirmation_email(user)
+        user.is_active = True
+        # send_activation_email(user, self.request)
         return super().form_valid(form)
+
+
+class UserUpdateView(UpdateView):
+    model = CustomUser
+    form_class = OwnerUserForm
+    template_name = "crud/update_user.html"
+    success_url = reverse_lazy("web_project:mailing_home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(self.request.user.pk)
+        context['pk'] = self.request.user.pk
+        return context
+
+
+class ManagerUserUpdateView(UpdateView):
+    model = CustomUser
+    template_name = "crud/manager_update_user.html"
+    success_url = reverse_lazy("web_project:mailing_home")
+
+    def get_form_class(self):
+        user = self.request.user
+        logging.debug(user)
+        if user.groups.filter(name="managers").exists():
+            logging.debug("ManagerUserForm")
+            return ManagerUserForm
+        elif user == self.object.owner:
+            logging.debug("OwnerUserForm")
+            return OwnerUserForm
+        raise PermissionDenied
 
 
 class UsersListView(ListView):
     model = CustomUser
-    template_name = "users_list.html"
+    template_name = "crud/users_list.html"
+    context_object_name = "users"
 
-    # def get_context_data(self, *, object_list=None, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     user = self.request.user
-    #     if user.has_perm()
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        if user.groups.filter(name="managers").exists():
+            context["is_in_group"] = self.request.user.groups.filter(
+                name="managers"
+            ).exists()
+            context["all_users"] = CustomUser.objects.all()
+        return context
 
 
-def confirm_email(request, uidb64, token):
-    User = get_user_model()
-    logging.debug('confirm_email')
-    # try:
-    user = User.objects.get(pk=uidb64)
-    logging.debug('get user')
-
-    # except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-    #     logging.debug('user none')
-    #     user = None
-    logging.debug(token)
+def activate(request, uidb64, token):
+    try:
+        user = CustomUser.objects.get(pk=uidb64)
+    except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+        user = None
     logging.debug(user)
+    logging.debug(token)
     logging.debug(default_token_generator.check_token(user, token))
     if user is not None and default_token_generator.check_token(user, token):
-        logging.debug('USER TRUE!!!')
         user.is_active = True
         user.save()
-        return render(request, 'result_confirm_email/email_confirm_success.html')
+        login(request, user)
+        return redirect("my_users:login")
     else:
-        logging.debug('user bad!!!')
-        user = CustomUser.objects.get(pk=uidb64).delete()
-        return render(request, 'result_confirm_email/email_confirm_failed.html')
+        return HttpResponse(
+            "The confirmation link was invalid, possibly because it has already been used."
+        )
 
 
 class CustomLoginView(LoginView):
@@ -73,16 +104,15 @@ class CustomLoginView(LoginView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class BlockUser(View):
-    def post(self, request, *args, **kwargs):
-        user_id = kwargs.get("user_id")
-        if not user_id:
-            raise ValueError("Missing required parameter 'pk'")
-        user = CustomUser.objects.get(id=user_id)
+class PasswordResetViewMy(PasswordResetView, PasswordContextMixin, FormView):
+    success_url = reverse_lazy('my_users:password_reset_done')
 
-        if request.user.has_perm("my_users:can_block_user"):
-            user.is_active = False
-        else:
-            return HttpResponseForbidden("You don't have enough rights")
+class PasswordResetConfirmViewMy(PasswordResetConfirmView, PasswordContextMixin, FormView):
+    success_url = reverse_lazy('my_users:password_reset_complete')
 
-        return redirect("web_project:home")
+class PasswordResetCompleteViewMy(PasswordResetCompleteView, PasswordContextMixin, TemplateView):
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["login_url"] = resolve_url(f'my_users:{settings.LOGIN_URL}')
+        return context

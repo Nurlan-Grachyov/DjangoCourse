@@ -67,6 +67,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "my_users.context_processors.is_in_group",  # Добавь сюда
             ],
         },
     },
@@ -145,3 +146,10 @@ AUTH_USER_MODEL = "my_users.CustomUser"
 LOGIN_REDIRECT_URL = "web_project:home"
 LOGOUT_REDIRECT_URL = "web_project:home"
 LOGIN_URL = "my_users:login"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+    }
+}

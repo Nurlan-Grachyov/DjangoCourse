@@ -1,35 +1,28 @@
 import logging
-from smtplib import SMTPException
 
-from django.core.mail import send_mail
-from django.http import HttpResponseForbidden
-from django.shortcuts import render, redirect
-from django.urls import reverse
 from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.urls import reverse
 
 from config.settings import EMAIL_HOST_USER
-from my_users.models import CustomUser
 
 logging.basicConfig(level=logging.DEBUG)
 
 
-def send_confirmation_email(user):
+def send_activation_email(user, request):
     token = default_token_generator.make_token(user)
-    logging.debug(token)
+    uid = user.pk
     logging.debug(user)
+    logging.debug(token)
     logging.debug(default_token_generator.check_token(user, token))
-    try:
-        link = f"http://localhost:8000{reverse('my_users:confirm_email', kwargs={'uidb64': user.pk, 'token': token})}"
-        logging.debug('link good')
-        send_mail(
-            'Подтвердите ваш email',
-            f'Перейдите по ссылке для подтверждения: {link}',
-            EMAIL_HOST_USER,
-            [user.email],
-            fail_silently=False,
-        )
-        logging.debug('send good')
-    except SMTPException as e:
-        user = CustomUser.objects.get(pk=user.pk).delete()
-        return HttpResponseForbidden("Попробуйте позже")
-
+    activation_link = f"http://localhost:8000{reverse('my_users:confirm_email', kwargs={'uidb64': uid,
+                                                                                        'token': token})}"
+    subject = "Активируйте ваш аккаунт"
+    message = render_to_string(
+        "activation.txt", {"user": user, "activation_link": activation_link}
+    )
+    send_mail(subject, message, EMAIL_HOST_USER, [user.email], fail_silently=False)
+    logging.debug(user)
+    logging.debug(token)
+    logging.debug(default_token_generator.check_token(user, token))
