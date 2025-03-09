@@ -3,26 +3,19 @@ import logging
 from django.contrib.auth import login
 from django.contrib.auth.models import Group
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.views import (
-    LoginView,
-    PasswordContextMixin,
-    PasswordResetView,
-    PasswordResetConfirmView,
-    PasswordResetCompleteView,
-)
+from django.contrib.auth.views import (LoginView, PasswordContextMixin,
+                                       PasswordResetCompleteView,
+                                       PasswordResetConfirmView,
+                                       PasswordResetView)
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, resolve_url
 from django.urls import reverse_lazy
-from django.views.generic import (
-    CreateView,
-    ListView,
-    UpdateView,
-    FormView,
-    TemplateView,
-)
+from django.views.generic import (CreateView, FormView, ListView, TemplateView,
+                                  UpdateView)
 
 from config import settings
+
 from .forms import ManagerUserForm, OwnerUserForm, RegisterForm
 from .management.commands.email_confirmation import send_activation_link
 from .models import CustomUser
