@@ -1,9 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView
 
 from web_project.models import Mailing, Recipient
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = "home.html"
 

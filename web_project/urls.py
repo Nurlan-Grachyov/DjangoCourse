@@ -5,13 +5,25 @@ from my_users.views import UserUpdateView
 from .apps import WebProjectConfig
 from .views import AttemptMailingCreateView, AttemptMailingListView
 from .views.home_page import HomeView
-from .views.mailings import (MailingCreateView, MailingDeleteView,
-                             MailingListView, MailingUpdateView)
-from .views.messages import (MessageCreateView, MessageDeleteView,
-                             MessageDetailView, MessageListView,
-                             MessageUpdateView)
-from .views.recipients import (RecipientCreateView, RecipientDeleteView,
-                               RecipientListView, RecipientUpdateView)
+from .views.mailings import (
+    MailingCreateView,
+    MailingDeleteView,
+    MailingListView,
+    MailingUpdateView,
+)
+from .views.messages import (
+    MessageCreateView,
+    MessageDeleteView,
+    MessageDetailView,
+    MessageListView,
+    MessageUpdateView,
+)
+from .views.recipients import (
+    RecipientCreateView,
+    RecipientDeleteView,
+    RecipientListView,
+    RecipientUpdateView,
+)
 
 app_name = WebProjectConfig.name
 
