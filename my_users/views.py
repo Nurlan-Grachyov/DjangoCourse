@@ -3,13 +3,24 @@ import logging
 from django.contrib.auth import login
 from django.contrib.auth.models import Group
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.views import LoginView, PasswordContextMixin, PasswordResetView, PasswordResetConfirmView, \
-    PasswordResetCompleteView
+from django.contrib.auth.views import (
+    LoginView,
+    PasswordContextMixin,
+    PasswordResetView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView,
+)
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, resolve_url
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView, FormView, TemplateView
+from django.views.generic import (
+    CreateView,
+    ListView,
+    UpdateView,
+    FormView,
+    TemplateView,
+)
 
 from config import settings
 from .forms import ManagerUserForm, OwnerUserForm, RegisterForm
@@ -39,7 +50,7 @@ class UserUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         print(self.request.user.pk)
-        context['pk'] = self.request.user.pk
+        context["pk"] = self.request.user.pk
         return context
 
 
@@ -85,7 +96,7 @@ def activate(request, uidb64, token):
     logging.debug(token)
     logging.debug(default_token_generator.check_token(user, token))
     if user is not None and token == user.token:
-        group_users = Group.objects.get(name='users')
+        group_users = Group.objects.get(name="users")
         user.groups.add(group_users)
         user.is_active = True
         user.save()
@@ -108,14 +119,20 @@ class CustomLoginView(LoginView):
 
 
 class PasswordResetViewMy(PasswordResetView, PasswordContextMixin, FormView):
-    success_url = reverse_lazy('my_users:password_reset_done')
+    success_url = reverse_lazy("my_users:password_reset_done")
 
-class PasswordResetConfirmViewMy(PasswordResetConfirmView, PasswordContextMixin, FormView):
-    success_url = reverse_lazy('my_users:password_reset_complete')
 
-class PasswordResetCompleteViewMy(PasswordResetCompleteView, PasswordContextMixin, TemplateView):
+class PasswordResetConfirmViewMy(
+    PasswordResetConfirmView, PasswordContextMixin, FormView
+):
+    success_url = reverse_lazy("my_users:password_reset_complete")
+
+
+class PasswordResetCompleteViewMy(
+    PasswordResetCompleteView, PasswordContextMixin, TemplateView
+):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["login_url"] = resolve_url(f'my_users:{settings.LOGIN_URL}')
+        context["login_url"] = resolve_url(f"my_users:{settings.LOGIN_URL}")
         return context

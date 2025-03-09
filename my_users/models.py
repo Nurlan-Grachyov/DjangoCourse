@@ -9,7 +9,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, verbose_name="Email")
     phone_number = PhoneNumberField(blank=True, null=True, verbose_name="Phone number")
     is_active = BooleanField(default=False)
-    token = models.CharField(blank = True, null = True)
+    token = models.CharField(blank=True, null=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
