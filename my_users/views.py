@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib.auth import login
+from django.contrib.auth.models import Group
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView, PasswordContextMixin, PasswordResetView, PasswordResetConfirmView, \
     PasswordResetCompleteView
@@ -12,6 +13,7 @@ from django.views.generic import CreateView, ListView, UpdateView, FormView, Tem
 
 from config import settings
 from .forms import ManagerUserForm, OwnerUserForm, RegisterForm
+from .management.commands.email_confirmation import send_activation_link
 from .models import CustomUser
 
 logging.basicConfig(level=logging.DEBUG)
@@ -24,8 +26,7 @@ class RegisterView(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-        user.is_active = True
-        # send_activation_email(user, self.request)
+        send_activation_link(user, self.request)
         return super().form_valid(form)
 
 
@@ -83,7 +84,9 @@ def activate(request, uidb64, token):
     logging.debug(user)
     logging.debug(token)
     logging.debug(default_token_generator.check_token(user, token))
-    if user is not None and default_token_generator.check_token(user, token):
+    if user is not None and token == user.token:
+        group_users = Group.objects.get(name='users')
+        user.groups.add(group_users)
         user.is_active = True
         user.save()
         login(request, user)
