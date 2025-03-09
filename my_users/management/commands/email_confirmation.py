@@ -10,12 +10,13 @@ from config.settings import EMAIL_HOST_USER
 logging.basicConfig(level=logging.DEBUG)
 
 
-def send_activation_email(user, request):
+def send_activation_link(user, request):
     token = default_token_generator.make_token(user)
     uid = user.pk
     logging.debug(user)
     logging.debug(token)
     logging.debug(default_token_generator.check_token(user, token))
+    user.token = token
     activation_link = f"http://localhost:8000{reverse('my_users:confirm_email', kwargs={'uidb64': uid,
                                                                                         'token': token})}"
     subject = "Активируйте ваш аккаунт"
