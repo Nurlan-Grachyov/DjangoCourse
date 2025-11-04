@@ -1,2 +1,7 @@
 2025-03-09 13:57:21 - WARNING - Not Found: /favicon.ico
 2025-03-09 13:59:52 - INFO - C:\Users\Nurlan\IT\Проекты\DjangoCourse\web_project\views\home_page.py changed, reloading.
+2025-09-04 09:37:41 - WARNING - Not Found: /
+2025-09-04 09:37:42 - WARNING - Not Found: /favicon.ico
+2025-09-04 09:37:54 - WARNING - Not Found: /web/
+2025-09-04 09:40:43 - WARNING - Ошибка при отправке ссылке подтверждения: (550, b'Message was not accepted -- invalid mailbox.  Local mailbox nurlan.test1@mail.ru is unavailable: user not found')
+2025-09-04 09:42:34 - WARNING - Not Found: /web/
